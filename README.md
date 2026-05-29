@@ -1,12 +1,42 @@
 # FAA-registry-checker
-Checks FAA Registry daily for new aircraft registered by certain owners as configured.
+Checks the FAA Registry daily for new aircraft registered by configured owner names, and optionally posts alerts to a Discord channel via webhook.
 
 Currently only searches for new aircraft by owner/registry name but plan to add more features like deregister, detect update to registration, and N-Number reserve.
 
-Configure in ./configs/mainconf.ini
-Currently outputs to terminal and Discord if configured w/ webhook. 
+## Requirements
+- Python 3.9+
+- pip packages: `colorama`, `pytz`, `discord-webhook`, `pause`, `requests`
 
-Example of program running
+Install dependencies:
+```
+pip install -r requirements.txt
+```
+
+## Setup
+
+### 1. Configure `./configs/mainconf.ini`
+
+**[TIME]**  
+Set your timezone for console display using tz database names (e.g. `America/New_York`). Full list [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Defaults to UTC if invalid.
+
+**[SEARCH]**  
+`NAMES` — JSON array of owner names to watch, exactly as they appear in the FAA registry (all caps). Example:
+```
+NAMES = ["DELTA AIR LINES INC", "AMERICAN AIRLINES INC"]
+```
+To find the exact name format, look up an aircraft on the [FAA Registry](https://registry.faa.gov/aircraftinquiry/Search/NNumberResult) and use the registrant name as shown.
+
+**[DISCORD]**  
+Set `ENABLE = True` and provide your webhook `URL` to receive Discord alerts for new registrations. Leave `ENABLE = False` to use terminal output only.
+
+### 2. Run
+```
+python __main__.py
+```
+
+The program will automatically download the FAA registry database on first run and re-download it each cycle. It checks once daily at 05:00 UTC.
+
+## Example output
 ```
 -------- 0 -------- 11:00:41 PM --------------------------------------------------------------------
 Already have FAA_Reg_DB_Latest.zip deleting and redownloading

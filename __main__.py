@@ -6,16 +6,7 @@ import traceback
 if platform.system() == "Windows":
     from colorama import init
     init(convert=True)
-elif platform.system() == "Linux":
-    pid_file_path = "./pid.pid"
-    def write_pid_file(filepath):
-        import os
-        pid = str(os.getpid())
-        f = open(filepath, 'w')
-        f.write(pid)
-        f.close()
-    write_pid_file(pid_file_path)
-    print("Made PIDFile")
+
 from datetime import datetime
 import pytz
 import os
@@ -78,7 +69,6 @@ def service_exit(signum, frame):
     if main_config.getboolean('DISCORD', 'ENABLE'):
         from defDiscord import sendDis
         sendDis("Service Stop", main_config)
-    os.remove(pid_file_path)
     raise SystemExit("Service Stop")
 signal.signal(signal.SIGTERM, service_exit)
 
@@ -151,6 +141,3 @@ except Exception as e:
         from defDiscord import sendDis
         sendDis(str("Error Exiting: " + str(e)), main_config, "crash_latest.log")
     raise e
-finally:
-    if platform.system() == "Linux" and os.path.isfile(pid_file_path):
-        os.remove(pid_file_path)
