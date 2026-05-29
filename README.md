@@ -31,7 +31,7 @@ Set `ENABLE = True` and provide your webhook `URL` to receive Discord alerts for
 
 ### 2. Run
 ```
-python __main__.py
+python src
 ```
 
 The program will automatically download the FAA registry database on first run and re-download it each cycle. It checks once daily at 05:00 UTC.
